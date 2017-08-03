@@ -1,0 +1,22 @@
+# ignore npm files
+node_modules
+npm-debug.log
+
+# ignore Mac files
+.DS_Store
+
+# IDE settings
+.idea
+.vscode/*
+!.vscode/launch.json
+
+# Local settings
+.env
+
+# Local exports
+*.pdf
+*.qif
+
+# ignore generated code
+dist/*
+coverage/*

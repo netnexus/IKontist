@@ -1,0 +1,45 @@
+{
+  "name": "ikontist",
+  "version": "0.2.2",
+  "description": "Connect to Kontist, fetch and create and transfers, export transactions as QIF",
+  "main": "dist/kontist-client.js",
+  "types": "dist/kontist-client.d.ts",
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netnexus/IKontist.git"
+  },
+  "dependencies": {
+    "@types/commander": "^2.9.1",
+    "@types/dotenv": "^4.0.0",
+    "commander": "^2.11.0",
+    "dotenv": "^4.0.0",
+    "node-rest-client": "^3.1.0",
+    "qif-writer": "^0.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/netnexus/IKontist/issues"
+  },
+  "homepage": "https://github.com/netnexus/IKontist#readme",
+  "devDependencies": {
+    "@types/chai": "^4.0.2",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.19",
+    "@types/sinon": "^2.3.3",
+    "chai": "^4.1.0",
+    "eslint": "^4.3.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "remap-istanbul": "^0.9.5",
+    "sinon": "^3.0.0"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul -x='cli.js' --include-all-sources cover ./node_modules/.bin/_mocha $(find dist/test/unit -name '*.js') --dir coverage/unit --print none && ./node_modules/.bin/remap-istanbul -i coverage/unit/coverage.json -o coverage/unit/coverage-ts -t html"
+  }
+}

@@ -1,0 +1,28 @@
+# ignore npm files
+node_modules
+npm-debug.log
+
+# ignore Mac files
+.DS_Store
+
+# IDE settings
+.idea
+.vscode/*
+!.vscode/launch.json
+
+# Local settings
+.env
+
+# Local exports
+*.pdf
+*.qif
+
+# ignore source
+src/*
+tsconfig.json
+tslint.json
+
+# ignore tests
+test/*
+coverage/*
+dist/test/*
