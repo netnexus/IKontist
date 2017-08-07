@@ -16,6 +16,7 @@ npm-debug.log
 # Local exports
 *.pdf
 *.qif
+.transfer-tmp.json
 
 # ignore source
 src/*

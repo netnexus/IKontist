@@ -81,8 +81,8 @@ To start a transfer you can use `transfer init` and `transfer confirm`:
 # init transfer of 1€ to John Doe
 node cli.js transfer init "John Doe" DE89370400440532013000 100 "test description"
 
-# use transfer id from result above (see links.self) and wait for sms with token (e.g. 252899)
-node cli.js transfer confirm 720140159196d55d53d4af87e1c38f46ctrx 252899 "John Doe" DE89370400440532013000 100 "test description"
+# wait for sms with token (e.g. 252899)
+node cli.js transfer confirm 252899
 ```
 
 

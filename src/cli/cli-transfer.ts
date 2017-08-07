@@ -4,8 +4,10 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import { KontistClient } from "../kontist-client";
 const kontist = new KontistClient();
+import * as fs from "async-file";
 import { Command } from "commander";
 
+const tmpFile = ".transfer-tmp.json";
 const program = new Command();
 
 program
@@ -30,21 +32,39 @@ program
             await kontist.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD);
             accountId = accountId || (await kontist.getAccounts())[0].id;
             const result = await kontist.initiateTransfer(accountId, recipient, iban, +amount, note);
-            process.stdout.write(JSON.stringify(result, null, 4));
+            process.stdout.write(JSON.stringify(result));
+
+            // save tmp file for confirm
+            await fs.writeFile(tmpFile, JSON.stringify({...result, accountId}), "utf8");
         } catch (error) {
             console.error(error);
         }
     });
 
 program
-    .command("confirm <transferId> <token> <recipient> <iban> <amount> <note> [accountId]")
-    .description("confirm a transfer, use transferId from init call and token from sms")
-    .action(async (transferId, token, recipient, iban, amount, note, accountId) => {
+    .command("confirm <token> [transferId] [recipient] [iban] [amount] [note] [accountId]")
+    .description("confirm a transfer, use values from previous init call or or give explicitly")
+    .action(async (token, transferId, recipient, iban, amount, note, accountId) => {
         try {
+            // restore data from tmp file
+            try {
+                const data = await fs.readFile(tmpFile, "utf8");
+                const json = JSON.parse(data);
+                transferId = json.links.self.split("/").slice(-1);
+                recipient = recipient || json.recipient;
+                iban = iban || json.iban;
+                amount = amount || json.amount;
+                note = note || json.note;
+                accountId = accountId || json.accountId;
+            } catch (e) {
+                console.error(e);
+            }
+
             await kontist.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD);
             accountId = accountId || (await kontist.getAccounts())[0].id;
             const result = await kontist.confirmTransfer(accountId, transferId, token, recipient, iban, +amount, note);
             process.stdout.write(JSON.stringify(result, null, 4));
+            await fs.unlink(tmpFile);
         } catch (error) {
             console.error(error);
         }
