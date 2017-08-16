@@ -85,6 +85,8 @@ node cli.js transfer init "John Doe" DE89370400440532013000 100 "test descriptio
 node cli.js transfer confirm 252899
 ```
 
+On macOS you can even use the `--auto` option with `init` to poll iMessages for the tan and automatically confirm the transfer.
+
 
 See more commands with 
 

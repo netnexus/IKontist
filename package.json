@@ -17,6 +17,7 @@
     "commander": "^2.11.0",
     "dotenv": "^4.0.0",
     "node-rest-client": "^3.1.0",
+    "osa-imessage": "^2.1.1",
     "qif-writer": "^0.1.0"
   },
   "bugs": {

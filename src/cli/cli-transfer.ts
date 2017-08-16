@@ -27,15 +27,32 @@ program
 program
     .command("init <recipient> <iban> <amount> <note> [accountId]")
     .description("initiate a transfer, amount is EUR in cents")
-    .action(async (recipient, iban, amount, note, accountId?: number) => {
+    .option("-a, --auto", "Read pin from imessages and auto confirm (requires macOS)")
+    .action(async (recipient, iban, amount, note, accountId: number, options: any) => {
         try {
             await kontist.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD);
             accountId = accountId || (await kontist.getAccounts())[0].id;
             const result = await kontist.initiateTransfer(accountId, recipient, iban, +amount, note);
             process.stdout.write(JSON.stringify(result));
 
-            // save tmp file for confirm
-            await fs.writeFile(tmpFile, JSON.stringify({...result, accountId}), "utf8");
+            if (options.auto) {
+                const imessage = require("osa-imessage");
+                imessage.listen().on("message", async (msg) => {
+                    if (msg.handle === "solarisbank") {
+                        const token = msg.text.match(/: (.*)\./)[1];
+                        const transferId = result.links.self.split("/").slice(-1);
+                        const confirmResult = await kontist.confirmTransfer(accountId,
+                            transferId, token, recipient, iban, +amount, note);
+                        process.stdout.write(JSON.stringify(confirmResult));
+                        process.exit();
+                    }
+                });
+            }
+
+            if (!options.auto) {
+                // save tmp file for confirm
+                await fs.writeFile(tmpFile, JSON.stringify({...result, accountId}), "utf8");
+            }
         } catch (error) {
             console.error(error);
         }
