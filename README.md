@@ -118,3 +118,4 @@ Please have a look at the `kontist-client.js`. Currently it provides methods for
     initiateTransfer(accountId, recipient, iban, amount, note)
     confirmTransfer(accountId, transferId, authorizationToken, recipient, iban, amount, note)
     getStatement(accountId, year, month)
+
