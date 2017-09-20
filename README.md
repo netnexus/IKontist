@@ -16,6 +16,7 @@ Please note that this project is in a early stage and support is welcome.
 ## How to use the CLI
 ### Prerequisites
 * [node](https://nodejs.org) and npm installed
+* Install with `npm install @netnexus/ikontist`
 * Add your Kontist username and password either to ENVs called `KONTIST_USER` and `KONTIST_PASSWORD` or a .env file (just rename `.env-template` to `.env` and replace the credentials).
 
 ### Examples
