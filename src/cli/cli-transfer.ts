@@ -32,13 +32,11 @@ program
         try {
             await kontist.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD);
             accountId = accountId || (await kontist.getAccounts())[0].id;
-            const result = await kontist.initiateTransfer(accountId, recipient, iban, +amount, note);
-            process.stdout.write(JSON.stringify(result));
-
+            let requested = false;
             if (options.auto) {
                 const imessage = require("osa-imessage");
                 imessage.listen().on("message", async (msg) => {
-                    if (msg.handle === "solarisbank") {
+                    if (requested && msg.handle === "solarisbank" && msg.text.match(iban) !== null) {
                         const token = msg.text.match(/: (.*)\./)[1];
                         const transferId = result.links.self.split("/").slice(-1);
                         const confirmResult = await kontist.confirmTransfer(accountId,
@@ -48,6 +46,10 @@ program
                     }
                 });
             }
+
+            const result = await kontist.initiateTransfer(accountId, recipient, iban, +amount, note);
+            requested = true; // we only want to look at the new incoming iMessages.
+            process.stdout.write(JSON.stringify(result));
 
             if (!options.auto) {
                 // save tmp file for confirm
