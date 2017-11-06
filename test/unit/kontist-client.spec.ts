@@ -108,10 +108,10 @@ describe("KontistClient", () => {
             const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
 
             // act
-            await client.getStatement(1, "2017", "02");
+            await client.getStatement("2017", "02");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts/1/statements/2017/02");
+            sinon.assert.calledWith(spyOnRequest, "user/statements/2017/02");
         });
     });
 
@@ -141,7 +141,11 @@ describe("KontistClient", () => {
             sinon.assert.calledWith(
                 spyOnGet,
                 "https://api.kontist.com/api/user",
-                { data: undefined, headers: { "Content-Type": "application/json" } },
+                {
+                    data: undefined,
+                    headers: { "Content-Type": "application/json" },
+                    requestConfig: { followRedirects: false },
+                },
                 sinon.match.any,
             );
         });
@@ -161,6 +165,7 @@ describe("KontistClient", () => {
                 {
                     data: undefined,
                     headers: { "Authorization": "Bearer TEST-TOKEN", "Content-Type": "application/json" },
+                    requestConfig: { followRedirects: false },
                 },
                 sinon.match.any,
             );

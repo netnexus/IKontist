@@ -35,7 +35,7 @@ export class KontistClient extends Client {
     }
 
     /**
-     * Create a new transfer, needs to be confirmed with the ´confirmTransfer` method and a 
+     * Create a new transfer, needs to be confirmed with the ´confirmTransfer` method and a
      * authorizationToken (you will receive via sms).
      * @param {number} accountId
      * @param {string} recipient
@@ -69,10 +69,9 @@ export class KontistClient extends Client {
 
     /**
      * Return a pdf statement.
-     * @param {number} accountId
      */
-    public getStatement(accountId: number, year: string, month: string): Promise<any> {
-        return this.request(`accounts/${accountId}/statements/${year}/${month}`);
+    public getStatement(year: string, month: string): Promise<any> {
+        return this.request(`user/statements/${year}/${month}`);
     }
 
     /**
@@ -100,8 +99,9 @@ export class KontistClient extends Client {
             headers.Authorization = "Bearer " + this.token;
         }
         return new Promise((resolve, reject) => {
-            this[method](BASE_URL + endpoint, { data, headers },
-                (result, raw) => this.handleResponse(result, raw, resolve, reject))
+            this[method](BASE_URL + endpoint, {
+                data, headers, requestConfig: { followRedirects: false },
+            }, (result, raw) => this.handleResponse(result, raw, resolve, reject))
                 .on("error", (err) => reject(err));
         });
     }
@@ -114,8 +114,15 @@ export class KontistClient extends Client {
      * @param {*} resolver
      * @param {*} rejecter
      */
-    private handleResponse( data: any, response: any,
-                            resolver: (data: any) => void, rejecter: (error: Error) => void): any {
+    private async handleResponse(data: any, response: any,
+                                 resolver: (data: any) => void, rejecter: (error: Error) => void): Promise<any> {
+        if (response.statusCode === 302) {
+            // manually redirect (w/o headers) to avoid problems an S3 when multiple Auth params are send.
+            // tslint:disable-next-line:no-string-literal
+            return await this["get"](response.headers.location, {},
+                (result, raw) => this.handleResponse(result, raw, resolver, rejecter))
+                .on("error", (err) => rejecter(err));
+        }
         if (response.statusCode < 200 || response.statusCode > 299) {
             console.debug(response);
             rejecter(new Error(response.statusMessage));
