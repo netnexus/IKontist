@@ -109,6 +109,10 @@ After instantiation of the class you need to login with your Kontist username an
         // do further calls to kontist here
     })
 
+Of course you can use import instead of require:
+    import { KontistClient } from "@netnexus/ikontist";
+    const client = new KontistClient();
+
 Please have a look at the `kontist-client.js`. Currently it provides methods for the following endpoints:
 
     login(email, password)
