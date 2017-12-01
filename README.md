@@ -110,6 +110,7 @@ After instantiation of the class you need to login with your Kontist username an
     })
 
 Of course you can use import instead of require:
+
     import { KontistClient } from "@netnexus/ikontist";
     const client = new KontistClient();
 
