@@ -25,7 +25,7 @@ node cli.js transaction list json
 ```
 
 will return
-```
+```json
 [
     {
         "amount": 100,
@@ -103,19 +103,23 @@ node cli.js --help
 
 After instantiation of the class you need to login with your Kontist username and password, e.g.
 
+```ts
     const KontistClient = require("kontist-client");
     const client = new KontistClient();
     client.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD).then(function() {
         // do further calls to kontist here
     })
+```
 
 Of course you can use import instead of require:
 
+```ts
     import { KontistClient } from "@netnexus/ikontist";
     const client = new KontistClient();
+```
 
 Please have a look at the `kontist-client.js`. Currently it provides methods for the following endpoints:
-
+```ts
     login(email, password)
     getUser()
     getAccounts()
@@ -124,4 +128,5 @@ Please have a look at the `kontist-client.js`. Currently it provides methods for
     initiateTransfer(accountId, recipient, iban, amount, note)
     confirmTransfer(accountId, transferId, authorizationToken, recipient, iban, amount, note)
     getStatement(accountId, year, month)
+```
 
