@@ -48,8 +48,7 @@ will return
         "type": null,
         "valuta_date": "2016-12-16T00:00:00.000Z",
         "paymentMethod": "bank_account"
-    },
-    ...
+    }
 ]
 ```
 
@@ -104,29 +103,29 @@ node cli.js --help
 After instantiation of the class you need to login with your Kontist username and password, e.g.
 
 ```ts
-    const KontistClient = require("kontist-client");
-    const client = new KontistClient();
-    client.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD).then(function() {
-        // do further calls to kontist here
-    })
+const KontistClient = require("kontist-client");
+const client = new KontistClient();
+client.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD).then(function() {
+    // do further calls to kontist here
+})
 ```
 
 Of course you can use import instead of require:
 
 ```ts
-    import { KontistClient } from "@netnexus/ikontist";
-    const client = new KontistClient();
+import { KontistClient } from "@netnexus/ikontist";
+const client = new KontistClient();
 ```
 
 Please have a look at the `kontist-client.js`. Currently it provides methods for the following endpoints:
 ```ts
-    login(email, password)
-    getUser()
-    getAccounts()
-    getTransactions(accountId)
-    getTransfers(accountId)
-    initiateTransfer(accountId, recipient, iban, amount, note)
-    confirmTransfer(accountId, transferId, authorizationToken, recipient, iban, amount, note)
-    getStatement(accountId, year, month)
+client.login(email, password)
+client.getUser()
+client.getAccounts()
+client.getTransactions(accountId)
+client.getTransfers(accountId)
+client.initiateTransfer(accountId, recipient, iban, amount, note)
+client.confirmTransfer(accountId, transferId, authorizationToken, recipient, iban, amount, note)
+client.getStatement(accountId, year, month)
 ```
 
