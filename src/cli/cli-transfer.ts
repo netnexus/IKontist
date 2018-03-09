@@ -20,6 +20,7 @@ program
             const transactions = kontist.getTransfers(accountId);
             process.stdout.write(JSON.stringify(transactions, null, 4));
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     });
@@ -34,28 +35,35 @@ program
             accountId = accountId || (await kontist.getAccounts())[0].id;
             let requested = false;
             if (options.auto) {
-                const imessage = require("osa-imessage");
-                imessage.listen().on("message", async (msg) => {
-                    if (requested && msg.handle === "solarisbank" && msg.text.match(iban) !== null) {
-                        const token = msg.text.match(/: (.*)\./)[1];
-                        const transferId = result.links.self.split("/").slice(-1);
-                        const confirmResult = await kontist.confirmTransfer(accountId,
-                            transferId, token, recipient, iban, +amount, note);
-                        process.stdout.write(JSON.stringify(confirmResult));
-                        process.exit();
-                    }
-                });
+                try {
+                    const imessage = require("osa-imessage");
+                    imessage.listen().on("message", async (msg) => {
+                        if (requested && msg.handle === "solarisbank" && msg.text.match(iban) !== null) {
+                            const token = msg.text.match(/: (.*)\./)[1];
+                            const transferId = result.links.self.split("/").slice(-1);
+                            const confirmResult = await kontist.confirmTransfer(accountId,
+                                transferId, token, recipient, iban, +amount, note);
+                            process.stdout.write(JSON.stringify(confirmResult, null, 4));
+                            process.exit();
+                        }
+                    });
+                } catch (e) {
+                    // tslint:disable-next-line:no-console
+                    console.error("'--auto' only works on a mac and with osa-imessage installed (npm i osa-imessage)");
+                    return;
+                }
             }
 
             const result = await kontist.initiateTransfer(accountId, recipient, iban, +amount, note);
             requested = true; // we only want to look at the new incoming iMessages.
-            process.stdout.write(JSON.stringify(result));
+            process.stdout.write(JSON.stringify(result, null, 4));
 
             if (!options.auto) {
                 // save tmp file for confirm
-                await fs.writeFile(tmpFile, JSON.stringify({...result, accountId}), "utf8");
+                await fs.writeFile(tmpFile, JSON.stringify({ ...result, accountId }), "utf8");
             }
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     });
@@ -76,6 +84,7 @@ program
                 note = note || json.note;
                 accountId = accountId || json.accountId;
             } catch (e) {
+                // tslint:disable-next-line:no-console
                 console.error(e);
             }
 
@@ -85,6 +94,7 @@ program
             process.stdout.write(JSON.stringify(result, null, 4));
             await fs.unlink(tmpFile);
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     });

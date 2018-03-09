@@ -88,6 +88,9 @@ node cli.js transfer confirm 252899
 On macOS you can even use the `--auto` option with `init` to poll iMessages for the tan and automatically confirm the transfer:
 
 ```bash
+# install peer dependency
+npm i osa-imessage
+
 # init and auto confirm transfer of 1€ to John Doe
 node cli.js transfer init "John Doe" DE89370400440532013000 100 "test description" --auto
 ```

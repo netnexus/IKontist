@@ -119,11 +119,12 @@ export class KontistClient extends Client {
         if (response.statusCode === 302) {
             // manually redirect (w/o headers) to avoid problems an S3 when multiple Auth params are send.
             // tslint:disable-next-line:no-string-literal
-            return await this["get"](response.headers.location, {},
+            return this["get"](response.headers.location, {},
                 (result, raw) => this.handleResponse(result, raw, resolver, rejecter))
                 .on("error", (err) => rejecter(err));
         }
         if (response.statusCode < 200 || response.statusCode > 299) {
+            // tslint:disable-next-line:no-console
             console.debug(response);
             rejecter(new Error(response.statusMessage));
         }

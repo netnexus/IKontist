@@ -17,6 +17,7 @@ program
             const accounts = await kontist.getAccounts();
             process.stdout.write(JSON.stringify(accounts, null, 4));
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     });
