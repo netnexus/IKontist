@@ -1,6 +1,6 @@
 {
   "name": "@netnexus/ikontist",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Connect to Kontist, fetch and create and transfers, export transactions as QIF",
   "main": "dist/src/kontist-client.js",
   "types": "dist/src/kontist-client.d.ts",
