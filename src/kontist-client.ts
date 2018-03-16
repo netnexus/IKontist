@@ -28,6 +28,15 @@ export class KontistClient extends Client {
     }
 
     /**
+     * Return list of future transactions.
+     * @param {number} accountId
+     * @param {number} limit
+     */
+    public async getFutureTransactions(accountId: number, limit = Number.MAX_SAFE_INTEGER): Promise<any> {
+        return this.fetchAmount(`/api/accounts/${accountId}/future-transactions`, limit);
+    }
+
+    /**
      * Return list of transfers.
      * @param {number} accountId
      * @param {number} limit

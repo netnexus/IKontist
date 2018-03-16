@@ -55,6 +55,19 @@ describe("KontistClient", () => {
         });
     });
 
+    describe("#getFutureTransactions()", () => {
+        it("should call correct endpoint", async () => {
+            // arrange
+            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+
+            // act
+            await client.getFutureTransactions(1);
+
+            // assert
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/future-transactions");
+        });
+    });
+
     describe("#getTransfers()", () => {
         it("should call correct endpoint", async () => {
             // arrange
