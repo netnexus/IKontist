@@ -25,7 +25,7 @@ describe("KontistClient", () => {
             await client.getUser();
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "user");
+            sinon.assert.calledWith(spyOnRequest, "/api/user");
         });
     });
 
@@ -38,7 +38,7 @@ describe("KontistClient", () => {
             await client.getAccounts();
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts");
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts");
         });
     });
 
@@ -51,7 +51,7 @@ describe("KontistClient", () => {
             await client.getTransactions(1);
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts/1/transactions");
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
         });
     });
 
@@ -64,7 +64,7 @@ describe("KontistClient", () => {
             await client.getTransfers(1);
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts/1/transfer");
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transfer");
         });
     });
 
@@ -77,7 +77,7 @@ describe("KontistClient", () => {
             await client.initiateTransfer(1, "mock recipient", "DE1234567890", 100, "mock");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts/1/transfer", "post",
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transfer", "post",
                 { recipient: "mock recipient", iban: "DE1234567890", amount: 100, note: "mock" });
         });
     });
@@ -91,7 +91,7 @@ describe("KontistClient", () => {
             await client.confirmTransfer(1, "tid", "token", "mock recipient", "DE1234567890", 100, "mock");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "accounts/1/transfer/tid", "put",
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transfer/tid", "put",
                 {
                     amount: 100,
                     authorizationToken: "token",
@@ -111,7 +111,7 @@ describe("KontistClient", () => {
             await client.getStatement("2017", "02");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "user/statements/2017/02");
+            sinon.assert.calledWith(spyOnRequest, "/api/user/statements/2017/02");
         });
     });
 
@@ -124,7 +124,8 @@ describe("KontistClient", () => {
             await client.login("user", "password");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "user/auth-token", "post", { email: "user", password: "password" });
+            sinon.assert.calledWith(spyOnRequest, "/api/user/auth-token", "post",
+                { email: "user", password: "password" });
         });
     });
 
@@ -143,7 +144,10 @@ describe("KontistClient", () => {
                 "https://api.kontist.com/api/user",
                 {
                     data: undefined,
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "accept": "application/vnd.kontist.transactionlist.v2+json",
+                    },
                     requestConfig: { followRedirects: false },
                 },
                 sinon.match.any,
@@ -164,7 +168,11 @@ describe("KontistClient", () => {
                 "https://api.kontist.com/api/user",
                 {
                     data: undefined,
-                    headers: { "Authorization": "Bearer TEST-TOKEN", "Content-Type": "application/json" },
+                    headers: {
+                        "Authorization": "Bearer TEST-TOKEN",
+                        "Content-Type": "application/json",
+                        "accept": "application/vnd.kontist.transactionlist.v2+json",
+                    },
                     requestConfig: { followRedirects: false },
                 },
                 sinon.match.any,

@@ -1,5 +1,5 @@
 import { Client } from "node-rest-client";
-const BASE_URL = "https://api.kontist.com/api/";
+const BASE_URL = "https://api.kontist.com";
 
 export class KontistClient extends Client {
     private token: string;
@@ -8,30 +8,32 @@ export class KontistClient extends Client {
      * Return information for logged in user. (via constructor {user: "", password: ""} parameters)
      */
     public getUser(): Promise<any> {
-        return this.request("user");
+        return this.request("/api/user");
     }
 
     /**
      * Return list of accounts.
      */
     public getAccounts(): Promise<any> {
-        return this.request("accounts");
+        return this.request("/api/accounts");
     }
 
     /**
      * Return list of transactions.
      * @param {number} accountId
+     * @param {number} limit
      */
-    public getTransactions(accountId: number): Promise<any> {
-        return this.request(`accounts/${accountId}/transactions`);
+    public async getTransactions(accountId: number, limit = Number.MAX_SAFE_INTEGER): Promise<any> {
+        return this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
     }
 
     /**
      * Return list of transfers.
      * @param {number} accountId
+     * @param {number} limit
      */
-    public getTransfers(accountId: number): Promise<any> {
-        return this.request(`accounts/${accountId}/transfer`);
+    public getTransfers(accountId: number, limit = Number.MAX_SAFE_INTEGER): Promise<any> {
+        return this.fetchAmount(`/api/accounts/${accountId}/transfer`, limit);
     }
 
     /**
@@ -50,7 +52,7 @@ export class KontistClient extends Client {
         amount: number,
         note: string,
     ): Promise<any> {
-        return this.request(`accounts/${accountId}/transfer`, "post", { recipient, iban, amount, note });
+        return this.request(`/api/accounts/${accountId}/transfer`, "post", { recipient, iban, amount, note });
     }
 
     /**
@@ -73,7 +75,7 @@ export class KontistClient extends Client {
         amount: number,
         note: string,
     ): Promise<any> {
-        return this.request(`accounts/${accountId}/transfer/${transferId}`,
+        return this.request(`/api/accounts/${accountId}/transfer/${transferId}`,
             "put", { authorizationToken, recipient, iban, amount, note });
     }
 
@@ -81,7 +83,7 @@ export class KontistClient extends Client {
      * Return a pdf statement.
      */
     public getStatement(year: string, month: string): Promise<any> {
-        return this.request(`user/statements/${year}/${month}`);
+        return this.request(`/api/user/statements/${year}/${month}`);
     }
 
     /**
@@ -91,9 +93,28 @@ export class KontistClient extends Client {
      * @param password
      */
     public async login(email: string, password: string): Promise<string> {
-        const result = await this.request("user/auth-token", "post", { email, password });
+        const result = await this.request("/api/user/auth-token", "post", { email, password });
         this.token = result.token;
         return this.token;
+    }
+
+    /**
+     * Fetch (unlimited) number of results.
+     *
+     * @param startUrl
+     * @param limit
+     */
+    private async fetchAmount(startUrl: string, limit: number) {
+        let total = limit;
+        let next = startUrl;
+        const results = [];
+        while (results.length < Math.min(total, limit)) {
+            const data = await this.request(next);
+            total = data.total;
+            next = data.next;
+            results.push(data.results);
+        }
+        return results.slice(0, limit);
     }
 
     /**
@@ -104,7 +125,10 @@ export class KontistClient extends Client {
      * @param {*} data
      */
     private request(endpoint: string, method = "get", data?: any): Promise<any> {
-        const headers: any = { "Content-Type": "application/json" };
+        const headers: any = {
+            "Content-Type": "application/json",
+            "accept": "application/vnd.kontist.transactionlist.v2+json",
+        };
         if (this.token) {
             headers.Authorization = "Bearer " + this.token;
         }
