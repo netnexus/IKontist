@@ -32,33 +32,110 @@ describe("KontistClient", () => {
     describe("#getAccounts()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve([{
+                accountType: "solaris",
+                balance: 12345,
+                bankCode: "11010100",
+                bankName: "solarisBank",
+                hasFastbillId: false,
+                hasInvalidCredentials: false,
+                iban: "DE12345678901234567890",
+                id: 1,
+                meta: {},
+            }]));
 
             // act
-            await client.getAccounts();
+            const accounts = await client.getAccounts();
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts");
+            expect(accounts).length(1);
+            expect(accounts[0]).to.eql({
+                accountType: "solaris",
+                balance: 12345,
+                bankCode: "11010100",
+                bankName: "solarisBank",
+                hasFastbillId: false,
+                hasInvalidCredentials: false,
+                iban: "DE12345678901234567890",
+                id: 1,
+                meta: {},
+            });
         });
     });
 
     describe("#getTransactions()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request")
+                .onFirstCall().resolves({
+                    next: "/api/accounts/1/transactions?page=2",
+                    results: [
+                        {
+                            amount: 123,
+                        }],
+                    total: 2,
+                })
+                .onSecondCall().resolves({
+                    next: null,
+                    results: [
+                        {
+                            amount: 345,
+                        }],
+                    total: 2,
+                });
 
             // act
-            await client.getTransactions(1);
+            const transactions = await client.getTransactions(1);
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
+            expect(transactions).to.eql([
+                { amount: 123 }, { amount: 345 },
+            ]);
+        });
+        it("should limit result", async () => {
+            // arrange
+            const spyOnRequest = sinon.stub(client as any, "request")
+                .onFirstCall().resolves({
+                    next: "/api/accounts/1/transactions?page=2",
+                    results: [
+                        {
+                            amount: 123,
+                        }],
+                    total: 2,
+                })
+                .onSecondCall().resolves({
+                    next: null,
+                    results: [
+                        {
+                            amount: 345,
+                        }],
+                    total: 2,
+                });
+
+            // act
+            const transactions = await client.getTransactions(1, 1);
+
+            // assert
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
+            expect(transactions).to.eql([
+                { amount: 123 },
+            ]);
         });
     });
 
     describe("#getFutureTransactions()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request").resolves({
+                next: null,
+                results: [
+                    {
+                        amount: 123,
+                    }],
+                total: 1,
+            });
 
             // act
             await client.getFutureTransactions(1);
@@ -71,7 +148,14 @@ describe("KontistClient", () => {
     describe("#getTransfers()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request").resolves({
+                next: null,
+                results: [
+                    {
+                        amount: 123,
+                    }],
+                total: 1,
+            });
 
             // act
             await client.getTransfers(1);

@@ -121,7 +121,7 @@ export class KontistClient extends Client {
             const data = await this.request(next);
             total = data.total;
             next = data.next;
-            results.push(data.results);
+            results.push(...data.results);
         }
         return results.slice(0, limit);
     }
