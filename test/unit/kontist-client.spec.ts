@@ -70,18 +70,16 @@ describe("KontistClient", () => {
             const spyOnRequest = sinon.stub(client as any, "request")
                 .onFirstCall().resolves({
                     next: "/api/accounts/1/transactions?page=2",
-                    results: [
-                        {
-                            amount: 123,
-                        }],
+                    results: [{
+                        amount: 123,
+                    }],
                     total: 2,
                 })
                 .onSecondCall().resolves({
                     next: null,
-                    results: [
-                        {
-                            amount: 345,
-                        }],
+                    results: [{
+                        amount: 345,
+                    }],
                     total: 2,
                 });
 
@@ -90,27 +88,23 @@ describe("KontistClient", () => {
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
-            expect(transactions).to.eql([
-                { amount: 123 }, { amount: 345 },
-            ]);
+            expect(transactions).to.eql([{ amount: 123 }, { amount: 345 }]);
         });
         it("should limit result", async () => {
             // arrange
             const spyOnRequest = sinon.stub(client as any, "request")
                 .onFirstCall().resolves({
                     next: "/api/accounts/1/transactions?page=2",
-                    results: [
-                        {
-                            amount: 123,
-                        }],
+                    results: [{
+                        amount: 123,
+                    }],
                     total: 2,
                 })
                 .onSecondCall().resolves({
                     next: null,
-                    results: [
-                        {
-                            amount: 345,
-                        }],
+                    results: [{
+                        amount: 345,
+                    }],
                     total: 2,
                 });
 
@@ -119,9 +113,7 @@ describe("KontistClient", () => {
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
-            expect(transactions).to.eql([
-                { amount: 123 },
-            ]);
+            expect(transactions).to.eql([{ amount: 123 }]);
         });
     });
 
@@ -130,10 +122,9 @@ describe("KontistClient", () => {
             // arrange
             const spyOnRequest = sinon.stub(client as any, "request").resolves({
                 next: null,
-                results: [
-                    {
-                        amount: 123,
-                    }],
+                results: [{
+                    amount: 123,
+                }],
                 total: 1,
             });
 
@@ -150,10 +141,9 @@ describe("KontistClient", () => {
             // arrange
             const spyOnRequest = sinon.stub(client as any, "request").resolves({
                 next: null,
-                results: [
-                    {
-                        amount: 123,
-                    }],
+                results: [{
+                    amount: 123,
+                }],
                 total: 1,
             });
 
@@ -188,14 +178,13 @@ describe("KontistClient", () => {
             await client.confirmTransfer(1, "tid", "token", "mock recipient", "DE1234567890", 100, "mock");
 
             // assert
-            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transfer/tid", "put",
-                {
-                    amount: 100,
-                    authorizationToken: "token",
-                    iban: "DE1234567890",
-                    note: "mock",
-                    recipient: "mock recipient",
-                });
+            sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transfer/tid", "put", {
+                amount: 100,
+                authorizationToken: "token",
+                iban: "DE1234567890",
+                note: "mock",
+                recipient: "mock recipient",
+            });
         });
     });
 
