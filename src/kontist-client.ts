@@ -43,8 +43,13 @@ export class KontistClient extends Client {
      * @param {number} amount cents
      * @param {string} note
      */
-    public initiateTransfer(accountId: number,
-                            recipient: string, iban: string, amount: number, note: string): Promise<any> {
+    public initiateTransfer(
+        accountId: number,
+        recipient: string,
+        iban: string,
+        amount: number,
+        note: string,
+    ): Promise<any> {
         return this.request(`accounts/${accountId}/transfer`, "post", { recipient, iban, amount, note });
     }
 
@@ -59,10 +64,15 @@ export class KontistClient extends Client {
      * @param {number} amount cents
      * @param {string} note
      */
-    public confirmTransfer( accountId: number,
-                            transferId: string,
-                            authorizationToken: string,
-                            recipient: string, iban: string, amount: number, note: string): Promise<any> {
+    public confirmTransfer(
+        accountId: number,
+        transferId: string,
+        authorizationToken: string,
+        recipient: string,
+        iban: string,
+        amount: number,
+        note: string,
+    ): Promise<any> {
         return this.request(`accounts/${accountId}/transfer/${transferId}`,
             "put", { authorizationToken, recipient, iban, amount, note });
     }
@@ -81,7 +91,7 @@ export class KontistClient extends Client {
      * @param password
      */
     public async login(email: string, password: string): Promise<string> {
-        const result = await this.request("user/auth-token", "post", {email, password});
+        const result = await this.request("user/auth-token", "post", { email, password });
         this.token = result.token;
         return this.token;
     }
@@ -114,8 +124,12 @@ export class KontistClient extends Client {
      * @param {*} resolver
      * @param {*} rejecter
      */
-    private async handleResponse(data: any, response: any,
-                                 resolver: (data: any) => void, rejecter: (error: Error) => void): Promise<any> {
+    private async handleResponse(
+        data: any,
+        response: any,
+        resolver: (data: any) => void,
+        rejecter: (error: Error) => void,
+    ): Promise<any> {
         if (response.statusCode === 302) {
             // manually redirect (w/o headers) to avoid problems an S3 when multiple Auth params are send.
             // tslint:disable-next-line:no-string-literal
