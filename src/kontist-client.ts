@@ -3,7 +3,7 @@ const BASE_URL = "https://api.kontist.com";
 
 export class KontistClient {
     private token: string;
-    private axios = axios;
+    private axios = axios.create();
 
     /**
      * Return information for logged in user. (via constructor {user: "", password: ""} parameters)
@@ -139,6 +139,7 @@ export class KontistClient {
             "Content-Type": "application/json",
             "accept": "application/vnd.kontist.transactionlist.v2+json",
         };
+        this.axios.defaults.headers.common = {};
         if (this.token) {
             headers.Authorization = "Bearer " + this.token;
         }
