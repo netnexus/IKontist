@@ -218,31 +218,29 @@ describe("KontistClient", () => {
     describe("#request", () => {
         it("should create request", async () => {
             // arrange
-            const spyOnGet = sinon.stub(client as any, "get").returns({ on: () => false });
-            spyOnGet.callsArgWith(2, null, { statusCode: 200 });
+            const spyOnAxios = sandbox.stub(client as any, "axios").resolves({});
 
             // act
             await client.getUser();
 
             // assert
             sinon.assert.calledWith(
-                spyOnGet,
-                "https://api.kontist.com/api/user",
+                spyOnAxios,
                 {
                     data: undefined,
                     headers: {
                         "Content-Type": "application/json",
                         "accept": "application/vnd.kontist.transactionlist.v2+json",
                     },
-                    requestConfig: { followRedirects: false },
+                    maxRedirects: 0,
+                    method: "get",
+                    url: "https://api.kontist.com/api/user",
                 },
-                sinon.match.any,
             );
         });
         it("should add Authorization header after login", async () => {
             // arrange
-            const spyOnGet = sinon.stub(client as any, "get").returns({ on: () => false });
-            spyOnGet.callsArgWith(2, null, { statusCode: 200 });
+            const spyOnAxios = sandbox.stub(client as any, "axios").resolves({});
             Object.assign(client, { token: "TEST-TOKEN" });
 
             // act
@@ -250,8 +248,7 @@ describe("KontistClient", () => {
 
             // assert
             sinon.assert.calledWith(
-                spyOnGet,
-                "https://api.kontist.com/api/user",
+                spyOnAxios,
                 {
                     data: undefined,
                     headers: {
@@ -259,9 +256,10 @@ describe("KontistClient", () => {
                         "Content-Type": "application/json",
                         "accept": "application/vnd.kontist.transactionlist.v2+json",
                     },
-                    requestConfig: { followRedirects: false },
+                    maxRedirects: 0,
+                    method: "get",
+                    url: "https://api.kontist.com/api/user",
                 },
-                sinon.match.any,
             );
         });
     });
@@ -270,8 +268,7 @@ describe("KontistClient", () => {
         it("should handle valid response", async () => {
             // arrange
             const resolveCallback = sinon.spy();
-            const spyOnGet = sinon.stub(client as any, "get").returns({ on: () => false });
-            spyOnGet.callsArgWith(2, { mock: "test" }, { statusCode: 200 }, resolveCallback);
+            sandbox.stub(client as any, "axios").resolves({ data: { mock: "test" }, status: 200, statusText: "mock" });
 
             // act
             await client.getUser();
@@ -281,10 +278,7 @@ describe("KontistClient", () => {
         });
         it("should handle invalid response", async () => {
             // arrange
-            const rejectCallback = sinon.spy();
-            const spyOnGet = sinon.stub(client as any, "get").returns({ on: () => false });
-            spyOnGet.callsArgWith(2, { mock: "test" },
-                { statusCode: 400, statusMessage: "mock" }, null, rejectCallback);
+            sandbox.stub(client as any, "axios").resolves({ status: 400, statusText: "mock" });
 
             // act
             try {
@@ -297,9 +291,7 @@ describe("KontistClient", () => {
         });
         it("should handle invalid network response", async () => {
             // arrange
-            const on = sinon.stub();
-            sinon.stub(client as any, "get").returns({ on });
-            on.callsArgWith(1, new Error("network outage"));
+            sandbox.stub(client as any, "axios").rejects(new Error("network outage"));
 
             // act
             try {

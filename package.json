@@ -1,6 +1,6 @@
 {
   "name": "@netnexus/ikontist",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Connect to Kontist, fetch and create and transfers, export transactions as QIF",
   "main": "dist/src/kontist-client.js",
   "types": "dist/src/kontist-client.d.ts",
@@ -21,9 +21,9 @@
     "@types/commander": "~2.12.2",
     "@types/dotenv": "~4.0.2",
     "async-file": "~2.0.2",
+    "axios": "^0.18.0",
     "commander": "~2.15.0",
     "dotenv": "~5.0.1",
-    "node-rest-client": "~3.1.0",
     "qif-writer": "~0.1.0"
   },
   "peerDependencies": {

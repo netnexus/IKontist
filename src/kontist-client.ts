@@ -1,8 +1,9 @@
-import { Client } from "node-rest-client";
+import { AxiosResponse, default as axios } from "axios";
 const BASE_URL = "https://api.kontist.com";
 
-export class KontistClient extends Client {
+export class KontistClient {
     private token: string;
+    private axios = axios;
 
     /**
      * Return information for logged in user. (via constructor {user: "", password: ""} parameters)
@@ -142,10 +143,15 @@ export class KontistClient extends Client {
             headers.Authorization = "Bearer " + this.token;
         }
         return new Promise((resolve, reject) => {
-            this[method](BASE_URL + endpoint, {
-                data, headers, requestConfig: { followRedirects: false },
-            }, (result, raw) => this.handleResponse(result, raw, resolve, reject))
-                .on("error", (err) => reject(err));
+            this.axios({
+                data,
+                headers,
+                maxRedirects: 0,
+                method,
+                url: BASE_URL + endpoint,
+            })
+                .then((result) => this.handleResponse(result, resolve, reject))
+                .catch((err) => reject(err));
         });
     }
 
@@ -158,23 +164,22 @@ export class KontistClient extends Client {
      * @param {*} rejecter
      */
     private async handleResponse(
-        data: any,
-        response: any,
+        result: AxiosResponse,
         resolver: (data: any) => void,
         rejecter: (error: Error) => void,
     ): Promise<any> {
-        if (response.statusCode === 302) {
+        if (result.status === 302) {
             // manually redirect (w/o headers) to avoid problems an S3 when multiple Auth params are send.
             // tslint:disable-next-line:no-string-literal
-            return this["get"](response.headers.location, {},
-                (result, raw) => this.handleResponse(result, raw, resolver, rejecter))
-                .on("error", (err) => rejecter(err));
+            return this.axios({ method: "get", url: result.headers.location })
+                .then((redirectedResult) => this.handleResponse(redirectedResult, resolver, rejecter))
+                .catch((err) => rejecter(err));
         }
-        if (response.statusCode < 200 || response.statusCode > 299) {
+        if (result.status < 200 || result.status > 299) {
             // tslint:disable-next-line:no-console
-            console.debug(response);
-            rejecter(new Error(response.statusMessage));
+            console.debug(result);
+            rejecter(new Error(result.statusText));
         }
-        resolver(data);
+        resolver(result.data);
     }
 }
