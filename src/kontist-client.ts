@@ -103,6 +103,7 @@ export class KontistClient {
      * @param password
      */
     public async login(email: string, password: string): Promise<string> {
+        this.token = null;
         const result = await this.request("/api/user/auth-token", "post", { email, password });
         this.token = result.token;
         return this.token;
