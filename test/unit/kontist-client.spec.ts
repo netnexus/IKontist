@@ -72,13 +72,18 @@ describe("KontistClient", () => {
                     next: "/api/accounts/1/transactions?page=2",
                     results: [{
                         amount: 123,
+                        id: 1,
                     }],
                     total: 2,
                 })
                 .onSecondCall().resolves({
                     next: null,
                     results: [{
+                        amount: 123,
+                        id: 1,
+                    }, {
                         amount: 345,
+                        id: 2,
                     }],
                     total: 2,
                 });
@@ -88,7 +93,7 @@ describe("KontistClient", () => {
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts/1/transactions");
-            expect(transactions).to.eql([{ amount: 123 }, { amount: 345 }]);
+            expect(transactions).to.eql([{ amount: 123, id: 1 }, { amount: 345, id: 2 }]);
         });
         it("should limit result", async () => {
             // arrange
