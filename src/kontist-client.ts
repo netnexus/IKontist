@@ -25,7 +25,12 @@ export class KontistClient {
      * @param {number} limit
      */
     public async getTransactions(accountId: number, limit = Number.MAX_SAFE_INTEGER): Promise<any> {
-        return this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
+        const transactions = await this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
+        // workaround to filter duplicates, as kontist sometimes returns the same object
+        // as the last element of an page and the first of the next...
+        return  transactions.filter((obj, pos, arr) => {
+            return arr.map((mapObj) => mapObj.id).indexOf(obj.id) === pos;
+        });
     }
 
     /**
