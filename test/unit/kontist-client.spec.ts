@@ -12,7 +12,7 @@ describe("KontistClient", () => {
         sandbox.restore();
     });
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         client = new KontistClient();
     });
 
