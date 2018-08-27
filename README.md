@@ -131,5 +131,9 @@ client.getTransfers(accountId, limit)
 client.initiateTransfer(accountId, recipient, iban, amount, note)
 client.confirmTransfer(accountId, transferId, authorizationToken, recipient, iban, amount, note)
 client.getStatement(accountId, year, month)
+client.initiateStandingOrder(...)
+client.confirmStandingOrder(...)
+client.initCancelStandingOrder(...)
+client.getWireTransferSuggestions(...)
 ```
 
