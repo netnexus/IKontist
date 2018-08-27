@@ -43,6 +43,86 @@ export class KontistClient {
     }
 
     /**
+     * Return list of standing orders.
+     * @param {number} accountId
+     * @param {number} limit
+     */
+    public async getStandingOrders(accountId: number): Promise<any> {
+        return this.request(`/api/accounts/${accountId}/standing-orders`);
+    }
+
+    /**
+     * Create a new standing order, needs to be confirmed with the ´confirmStandingOrder` method and a
+     * authorizationToken (you will receive via sms).
+     * @param {number} accountId
+     * @param {string} recipient
+     * @param {string} iban
+     * @param {number} amount cents
+     * @param {string} note
+     * @param {string} reoccurrence "MONTHLY" | "QUARTERLY" | "EVERY_SIX_MONTHS" | "YEARLY"
+     * @param {string} firstExecutionDate e.g. "2018-08-29T00:00:00+00:00"
+     */
+    public initiateStandingOrder(
+        accountId: number,
+        recipient: string,
+        iban: string,
+        amount: number,
+        note: string,
+        reoccurrence: "MONTHLY" | "QUARTERLY" | "EVERY_SIX_MONTHS" | "ANNUALLY",
+        firstExecutionDate: string
+    ): Promise<any> {
+        return this.request(`/api/accounts/${accountId}/standing-orders`, "post", {
+            iban,
+            recipient,
+            note,
+            amount,
+            reoccurrence,
+            firstExecutionDate,
+            e2eId: null,
+            standingOrderToggle: true,
+        });
+    }
+
+    /**
+     * Confirm a standing order or confirm cancelation.
+     * @param {number} accountId
+     * @param {string} requestId
+     * @param {string} authorizationToken
+     */
+    public confirmStandingOrder(
+        accountId: number,
+        requestId: string,
+        authorizationToken: string,
+    ): Promise<any> {
+        return this.request(`/api/accounts/${accountId}/standing-orders/confirm`,
+            "post", {
+                requestId,
+                authorizationToken,
+        });
+    }
+
+    /**
+     * Cancel a standing order
+     * @param {number} accountId
+     * @param {string} standingOrderId
+     */
+    public initCancelStandingOrder(
+        accountId: number,
+        standingOrderId: string
+    ): Promise<any> {
+        return this.request(`/api/accounts/${accountId}/standing-orders/${standingOrderId}/cancel`, "patch", {});
+    }
+
+    /**
+     * Return list of wire transfer suggestions.
+     * @param {number} accountId
+     * @param {number} limit
+     */
+    public async getWireTransferSuggestions(accountId: number): Promise<any> {
+        return this.request(`/api/accounts/${accountId}/wire-transfer-suggestions`);
+    }
+
+    /**
      * Return list of transfers.
      * @param {number} accountId
      * @param {number} limit
