@@ -116,7 +116,6 @@ export class KontistClient {
     /**
      * Return list of wire transfer suggestions.
      * @param {number} accountId
-     * @param {number} limit
      */
     public async getWireTransferSuggestions(accountId: number): Promise<any> {
         return this.request(`/api/accounts/${accountId}/wire-transfer-suggestions`);
