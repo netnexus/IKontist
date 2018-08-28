@@ -59,7 +59,7 @@ export class KontistClient {
      * @param {string} iban
      * @param {number} amount cents
      * @param {string} note
-     * @param {string} reoccurrence "MONTHLY" | "QUARTERLY" | "EVERY_SIX_MONTHS" | "YEARLY"
+     * @param {string} reoccurrence "MONTHLY" | "QUARTERLY" | "EVERY_SIX_MONTHS" | "ANNUALLY"
      * @param {string} firstExecutionDate e.g. "2018-08-29T00:00:00+00:00"
      */
     public initiateStandingOrder(
@@ -69,16 +69,16 @@ export class KontistClient {
         amount: number,
         note: string,
         reoccurrence: "MONTHLY" | "QUARTERLY" | "EVERY_SIX_MONTHS" | "ANNUALLY",
-        firstExecutionDate: string
+        firstExecutionDate: string,
     ): Promise<any> {
         return this.request(`/api/accounts/${accountId}/standing-orders`, "post", {
-            iban,
-            recipient,
-            note,
             amount,
-            reoccurrence,
-            firstExecutionDate,
             e2eId: null,
+            firstExecutionDate,
+            iban,
+            note,
+            recipient,
+            reoccurrence,
             standingOrderToggle: true,
         });
     }
@@ -96,19 +96,19 @@ export class KontistClient {
     ): Promise<any> {
         return this.request(`/api/accounts/${accountId}/standing-orders/confirm`,
             "post", {
-                requestId,
                 authorizationToken,
+                requestId,
         });
     }
 
     /**
-     * Cancel a standing order
+     * Cancel a standing order.
      * @param {number} accountId
      * @param {string} standingOrderId
      */
     public initCancelStandingOrder(
         accountId: number,
-        standingOrderId: string
+        standingOrderId: string,
     ): Promise<any> {
         return this.request(`/api/accounts/${accountId}/standing-orders/${standingOrderId}/cancel`, "patch", {});
     }
