@@ -115,10 +115,13 @@ export class KontistClient {
 
     /**
      * Return list of wire transfer suggestions.
-     * @param {number} accountId
+     * @param {string} query part of name or iban
      */
-    public async getWireTransferSuggestions(accountId: number): Promise<any> {
-        return this.request(`/api/accounts/${accountId}/wire-transfer-suggestions`);
+    public async getWireTransferSuggestions(query: string): Promise<any> {
+        query = query.toLowerCase();
+        const suggestions = await this.request(`/api/wire-transfer-suggestions`);
+        return suggestions.filter((sug) => (
+            sug.name.toLowerCase().indexOf(query) > -1 || sug.iban.toLowerCase().indexOf(query) > -1));
     }
 
     /**
