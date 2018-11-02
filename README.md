@@ -106,8 +106,8 @@ node cli.js --help
 After instantiation of the class you need to login with your Kontist username and password, e.g.
 
 ```ts
-const KontistClient = require("kontist-client");
-const client = new KontistClient();
+const ikontist = require("kontist-client");
+const client = new ikontist.KontistClient();
 client.login(process.env.KONTIST_USER, process.env.KONTIST_PASSWORD).then(function() {
     // do further calls to kontist here
 })
