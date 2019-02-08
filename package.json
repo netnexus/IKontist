@@ -19,11 +19,11 @@
   },
   "dependencies": {
     "@types/commander": "~2.12.2",
-    "@types/dotenv": "^4.0.3",
+    "@types/dotenv": "^6.1.0",
     "async-file": "~2.0.2",
     "axios": "^0.18.0",
-    "commander": "^2.15.1",
-    "dotenv": "^6.0.0",
+    "commander": "^2.19.0",
+    "dotenv": "^6.2.0",
     "osa-imessage": "^2.4.2",
     "qif-writer": "~0.1.0"
   },
@@ -31,14 +31,14 @@
     "osa-imessage": "~2.4.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.3",
-    "@types/node": "^10.3.4",
-    "@types/sinon": "^5.0.1",
-    "chai": "~4.1.2",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.23",
+    "@types/sinon": "^7.0.5",
+    "chai": "^4.2.0",
     "istanbul": "~0.4.5",
     "mocha": "^5.2.0",
-    "remap-istanbul": "^0.11.1",
-    "sinon": "^6.0.0"
+    "remap-istanbul": "^0.13.0",
+    "sinon": "^7.2.3"
   }
 }
