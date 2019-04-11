@@ -27,7 +27,7 @@ program
                     const qif = require("qif-writer");
                     const data = transactions.map((row) => ({
                         amount: row.amount / 100 * (row.from === accountId ? -1 : 1),
-                        date: new Date(row.date).toLocaleDateString("en-US"),
+                        date: new Date(row.bookingDate).toLocaleDateString("en-US"),
                         memo: row.purpose,
                         payee: row.name,
                     }));

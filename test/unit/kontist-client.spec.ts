@@ -7,19 +7,25 @@ import { KontistClient } from "../../src/kontist-client";
 describe("KontistClient", () => {
     let client: KontistClient;
     let sandbox: sinon.SinonSandbox;
+    let axiosStub: any;
 
     afterEach(() => {
         sandbox.restore();
     });
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        client = new KontistClient();
+        axiosStub = sandbox.stub().returns(Promise.resolve({
+            data: {},
+            status: 200,
+        }));
+        client = new KontistClient(axiosStub);
+        client = new KontistClient(axiosStub);
     });
 
     describe("#getUser()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.getUser();
@@ -32,61 +38,47 @@ describe("KontistClient", () => {
     describe("#getAccounts()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve([{
-                accountType: "solaris",
-                balance: 12345,
-                bankCode: "11010100",
-                bankName: "solarisBank",
-                hasFastbillId: false,
-                hasInvalidCredentials: false,
-                iban: "DE12345678901234567890",
-                id: 1,
-                meta: {},
-            }]));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
-            const accounts = await client.getAccounts();
+            await client.getAccounts();
 
             // assert
             sinon.assert.calledWith(spyOnRequest, "/api/accounts");
-            expect(accounts).length(1);
-            expect(accounts[0]).to.eql({
-                accountType: "solaris",
-                balance: 12345,
-                bankCode: "11010100",
-                bankName: "solarisBank",
-                hasFastbillId: false,
-                hasInvalidCredentials: false,
-                iban: "DE12345678901234567890",
-                id: 1,
-                meta: {},
-            });
         });
     });
 
     describe("#getTransactions()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request")
+            axiosStub = sandbox.stub()
                 .onFirstCall().resolves({
-                    next: "/api/accounts/1/transactions?page=2",
-                    results: [{
-                        amount: 123,
-                        id: 1,
-                    }],
-                    total: 2,
+                    data: {
+                        next: "/api/accounts/1/transactions?page=2",
+                        results: [{
+                            amount: 123,
+                            id: 1,
+                        }],
+                        total: 2,
+                    },
+                    status: 200,
                 })
                 .onSecondCall().resolves({
-                    next: null,
-                    results: [{
-                        amount: 123,
-                        id: 1,
-                    }, {
-                        amount: 345,
-                        id: 2,
-                    }],
-                    total: 2,
+                    data: {
+                        next: null,
+                        results: [{
+                            amount: 123,
+                            id: 1,
+                        }, {
+                            amount: 345,
+                            id: 2,
+                        }],
+                        total: 2,
+                    },
+                    status: 200,
                 });
+            client = new KontistClient(axiosStub);
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             const transactions = await client.getTransactions(1);
@@ -97,21 +89,30 @@ describe("KontistClient", () => {
         });
         it("should limit result", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request")
+            axiosStub = sandbox.stub()
+
                 .onFirstCall().resolves({
-                    next: "/api/accounts/1/transactions?page=2",
-                    results: [{
-                        amount: 123,
-                    }],
-                    total: 2,
+                    data: {
+                        next: "/api/accounts/1/transactions?page=2",
+                        results: [{
+                            amount: 123,
+                        }],
+                        total: 2,
+                    },
+                    status: 200,
                 })
                 .onSecondCall().resolves({
-                    next: null,
-                    results: [{
-                        amount: 345,
-                    }],
-                    total: 2,
+                    data: {
+                        next: null,
+                        results: [{
+                            amount: 345,
+                        }],
+                        total: 2,
+                    },
+                    status: 200,
                 });
+            client = new KontistClient(axiosStub);
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             const transactions = await client.getTransactions(1, 1);
@@ -125,13 +126,18 @@ describe("KontistClient", () => {
     describe("#getFutureTransactions()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").resolves({
-                next: null,
-                results: [{
-                    amount: 123,
-                }],
-                total: 1,
+            axiosStub = sandbox.stub().resolves({
+                data: {
+                    next: null,
+                    results: [{
+                        amount: 123,
+                    }],
+                    total: 1,
+                },
+                status: 200,
             });
+            client = new KontistClient(axiosStub);
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.getFutureTransactions(1);
@@ -144,13 +150,18 @@ describe("KontistClient", () => {
     describe("#getTransfers()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").resolves({
-                next: null,
-                results: [{
-                    amount: 123,
-                }],
-                total: 1,
+            axiosStub = sandbox.stub().resolves({
+                data: {
+                    next: null,
+                    results: [{
+                        amount: 123,
+                    }],
+                    total: 1,
+                },
+                status: 200,
             });
+            client = new KontistClient(axiosStub);
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.getTransfers(1);
@@ -163,7 +174,7 @@ describe("KontistClient", () => {
     describe("#initiateTransfer()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.initiateTransfer(1, "mock recipient", "DE1234567890", 100, "mock");
@@ -177,7 +188,7 @@ describe("KontistClient", () => {
     describe("#confirmTransfer()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.confirmTransfer(1, "tid", "token", "mock recipient", "DE1234567890", 100, "mock");
@@ -196,7 +207,7 @@ describe("KontistClient", () => {
     describe("#getStatement()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.getStatement("2017", "02");
@@ -209,7 +220,7 @@ describe("KontistClient", () => {
     describe("#login()", () => {
         it("should call correct endpoint", async () => {
             // arrange
-            const spyOnRequest = sinon.stub(client as any, "request").returns(Promise.resolve({}));
+            const spyOnRequest = sinon.stub(client as any, "request" as any).callThrough();
 
             // act
             await client.login("user", "password");
@@ -223,14 +234,13 @@ describe("KontistClient", () => {
     describe("#request", () => {
         it("should create request", async () => {
             // arrange
-            const spyOnAxios = sandbox.stub(client as any, "axios").resolves({});
 
             // act
             await client.getUser();
 
             // assert
             sinon.assert.calledWith(
-                spyOnAxios,
+                axiosStub,
                 {
                     data: undefined,
                     headers: {
@@ -245,7 +255,6 @@ describe("KontistClient", () => {
         });
         it("should add Authorization header after login", async () => {
             // arrange
-            const spyOnAxios = sandbox.stub(client as any, "axios").resolves({});
             Object.assign(client, { token: "TEST-TOKEN" });
 
             // act
@@ -253,7 +262,7 @@ describe("KontistClient", () => {
 
             // assert
             sinon.assert.calledWith(
-                spyOnAxios,
+                axiosStub,
                 {
                     data: undefined,
                     headers: {
@@ -273,7 +282,8 @@ describe("KontistClient", () => {
         it("should handle valid response", async () => {
             // arrange
             const resolveCallback = sinon.spy();
-            sandbox.stub(client as any, "axios").resolves({ data: { mock: "test" }, status: 200, statusText: "mock" });
+            axiosStub = sandbox.stub().resolves({ data: { mock: "test" }, status: 200, statusText: "mock" });
+            client = new KontistClient(axiosStub);
 
             // act
             await client.getUser();
@@ -283,7 +293,8 @@ describe("KontistClient", () => {
         });
         it("should handle invalid response", async () => {
             // arrange
-            sandbox.stub(client as any, "axios").resolves({ status: 400, statusText: "mock" });
+            axiosStub = sandbox.stub().resolves({ status: 400, statusText: "mock" });
+            client = new KontistClient(axiosStub);
 
             // act
             try {
@@ -296,7 +307,8 @@ describe("KontistClient", () => {
         });
         it("should handle invalid network response", async () => {
             // arrange
-            sandbox.stub(client as any, "axios").rejects(new Error("network outage"));
+            axiosStub = sandbox.stub().rejects(new Error("network outage"));
+            client = new KontistClient(axiosStub);
 
             // act
             try {

@@ -1,9 +1,14 @@
-import { AxiosResponse, default as axios } from "axios";
+import { AxiosResponse, default as axiosClient } from "axios";
+import * as _ from "lodash";
+
 const BASE_URL = "https://api.kontist.com";
 
 export class KontistClient {
     private token: string;
-    private axios = axios.create();
+
+    public constructor(private axios = axiosClient.create()) {
+        _.set(this, "axios.defaults.headers.common", {});
+    }
 
     /**
      * Return information for logged in user. (via constructor {user: "", password: ""} parameters)
@@ -28,7 +33,7 @@ export class KontistClient {
         const transactions = await this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
         // workaround to filter duplicates, as kontist sometimes returns the same object
         // as the last element of an page and the first of the next...
-        return  transactions.filter((obj, pos, arr) => {
+        return transactions.filter((obj, pos, arr) => {
             return arr.map((mapObj) => mapObj.id).indexOf(obj.id) === pos;
         });
     }
@@ -98,7 +103,7 @@ export class KontistClient {
             "post", {
                 authorizationToken,
                 requestId,
-        });
+            });
     }
 
     /**
@@ -222,12 +227,11 @@ export class KontistClient {
      * @param {string} method = get
      * @param {*} data
      */
-    private request(endpoint: string, method = "get", data?: any): Promise<any> {
+    private async request(endpoint: string, method = "get", data?: any): Promise<any> {
         const headers: any = {
             "Content-Type": "application/json",
             "accept": "application/vnd.kontist.transactionlist.v2+json",
         };
-        this.axios.defaults.headers.common = {};
         if (this.token) {
             headers.Authorization = "Bearer " + this.token;
         }

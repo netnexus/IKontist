@@ -17,6 +17,7 @@ program
             const statement = await kontist.getStatement(year, month);
             process.stdout.write(statement);
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     });

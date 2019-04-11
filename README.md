@@ -29,24 +29,21 @@ will return
 [
     {
         "amount": 100,
-        "booking_date": "2016-12-16T00:00:00.000Z",
-        "booking_type": "SEPA_CREDIT_TRANSFER",
+        "bookingDate": "2016-12-16T00:00:00.000Z",
+        "bookingType": "SEPA_CREDIT_TRANSFER",
         "category": null,
-        "date": "2016-12-16T00:00:00.000Z",
-        "debitoor_invoice_id": null,
-        "debitoor_invoice_number": null,
-        "e2e_id": "NOTPROVIDED",
-        "foreign_currency": null,
+        "e2eId": "NOTPROVIDED",
+        "foreignCurrency": null,
         "from": null,
         "iban": "DEXXXXX",
         "id": 4711,
         "name": "Foo, Bar",
-        "original_amount": null,
-        "pending_from": null,
+        "originalAmount": null,
+        "pendingFrom": null,
         "purpose": "Fancy Friday, Baby",
         "to": 3214,
         "type": null,
-        "valuta_date": "2016-12-16T00:00:00.000Z",
+        "valutaDate": "2016-12-16T00:00:00.000Z",
         "paymentMethod": "bank_account"
     }
 ]
