@@ -1,4 +1,4 @@
-import { AxiosResponse, default as axiosClient } from "axios";
+import { AxiosResponse, default as axiosClient, Method } from "axios";
 import * as _ from "lodash";
 
 const BASE_URL = "https://api.kontist.com";
@@ -227,7 +227,7 @@ export class KontistClient {
      * @param {string} method = get
      * @param {*} data
      */
-    private async request(endpoint: string, method = "get", data?: any): Promise<any> {
+    private async request(endpoint: string, method: Method = "get", data?: any): Promise<any> {
         const headers: any = {
             "Content-Type": "application/json",
             "accept": "application/vnd.kontist.transactionlist.v2+json",

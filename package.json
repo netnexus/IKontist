@@ -24,6 +24,7 @@
     "axios": "^0.19.0",
     "commander": "^2.20.0",
     "dotenv": "^8.0.0",
+    "lodash": "^4.17.11",
     "osa-imessage": "^2.4.2",
     "qif-writer": "~0.1.0"
   },
