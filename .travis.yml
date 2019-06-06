@@ -1,12 +1,7 @@
 language: node_js
 node_js:
-  - "node"
-addons:
-  apt:
-    packages:
-    - musl-dev
+  - "lts/*"
 before_install:
-- sudo ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
 - npm install -g typescript
 - npm install
 - tsc
