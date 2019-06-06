@@ -245,7 +245,7 @@ describe("KontistClient", () => {
                     data: undefined,
                     headers: {
                         "Content-Type": "application/json",
-                        "accept": "application/vnd.kontist.transactionlist.v2+json",
+                        "accept": "application/vnd.kontist.transactionlist.v2.1+json",
                     },
                     maxRedirects: 0,
                     method: "get",
@@ -268,7 +268,7 @@ describe("KontistClient", () => {
                     headers: {
                         "Authorization": "Bearer TEST-TOKEN",
                         "Content-Type": "application/json",
-                        "accept": "application/vnd.kontist.transactionlist.v2+json",
+                        "accept": "application/vnd.kontist.transactionlist.v2.1+json",
                     },
                     maxRedirects: 0,
                     method: "get",

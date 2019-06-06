@@ -230,7 +230,7 @@ export class KontistClient {
     private async request(endpoint: string, method: Method = "get", data?: any): Promise<any> {
         const headers: any = {
             "Content-Type": "application/json",
-            "accept": "application/vnd.kontist.transactionlist.v2+json",
+            "accept": "application/vnd.kontist.transactionlist.v2.1+json",
         };
         if (this.token) {
             headers.Authorization = "Bearer " + this.token;
