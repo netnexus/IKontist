@@ -35,7 +35,7 @@
     "@types/chai": "^4.1.7",
     "@types/lodash": "^4.14.136",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.6.2",
+    "@types/node": "^12.6.6",
     "@types/sinon": "^7.0.13",
     "chai": "^4.2.0",
     "istanbul": "~0.4.5",
