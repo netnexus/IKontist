@@ -1,3 +1,6 @@
+# Deprecated - please switch to the official SDK
+*This is deprecated as Kontist is now providing an official SDK, please see https://kontist.dev and https://github.com/kontist/sdk*
+
 # IKontist
 This repository is not an official repository of the Kontist GmbH.
 It connects to a currently undocumented REST API.
