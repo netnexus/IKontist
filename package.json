@@ -21,25 +21,25 @@
     "@types/commander": "~2.12.2",
     "@types/dotenv": "^6.1.1",
     "async-file": "~2.0.2",
-    "axios": "^0.19.0",
-    "commander": "^2.20.0",
+    "axios": "^0.19.2",
+    "commander": "^2.20.3",
     "dotenv": "^8.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "qif-writer": "~0.1.0"
   },
   "peerDependencies": {
     "osa-imessage": "~2.4.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.7",
-    "@types/lodash": "^4.14.149",
+    "@types/chai": "^4.2.14",
+    "@types/lodash": "^4.14.165",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.6.6",
-    "@types/sinon": "^7.5.1",
+    "@types/node": "^12.19.8",
+    "@types/sinon": "^7.5.2",
     "chai": "^4.2.0",
     "istanbul": "~0.4.5",
-    "mocha": "^6.2.2",
+    "mocha": "^6.2.3",
     "remap-istanbul": "^0.13.0",
-    "sinon": "^7.3.2"
+    "sinon": "^7.5.0"
   }
 }
