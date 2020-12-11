@@ -1,5 +1,6 @@
-import { AxiosResponse, default as axiosClient, Method } from "axios";
 import * as _ from "lodash";
+
+import { AxiosResponse, Method, default as axiosClient } from "axios";
 
 const BASE_URL = "https://api.kontist.com";
 
@@ -30,12 +31,7 @@ export class KontistClient {
      * @param {number} limit
      */
     public async getTransactions(accountId: number, limit = Number.MAX_SAFE_INTEGER): Promise<any> {
-        const transactions = await this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
-        // workaround to filter duplicates, as kontist sometimes returns the same object
-        // as the last element of an page and the first of the next...
-        return transactions.filter((obj, pos, arr) => {
-            return arr.map((mapObj) => mapObj.id).indexOf(obj.id) === pos;
-        });
+        return this.fetchAmount(`/api/accounts/${accountId}/transactions`, limit);
     }
 
     /**
@@ -101,9 +97,9 @@ export class KontistClient {
     ): Promise<any> {
         return this.request(`/api/accounts/${accountId}/standing-orders/confirm`,
             "post", {
-                authorizationToken,
-                requestId,
-            });
+            authorizationToken,
+            requestId,
+        });
     }
 
     /**

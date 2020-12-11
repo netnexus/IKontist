@@ -1,8 +1,9 @@
-import { expect } from "chai";
 import "mocha";
+
 import * as sinon from "sinon";
 
 import { KontistClient } from "../../src/kontist-client";
+import { expect } from "chai";
 
 describe("KontistClient", () => {
     let client: KontistClient;
@@ -67,9 +68,6 @@ describe("KontistClient", () => {
                     data: {
                         next: null,
                         results: [{
-                            amount: 123,
-                            id: 1,
-                        }, {
                             amount: 345,
                             id: 2,
                         }],
